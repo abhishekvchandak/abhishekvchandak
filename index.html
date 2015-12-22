@@ -1,12 +1,11 @@
 <html>
 <head>
-<title>Calculator</title>
 <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
 	<link href="css/font-awesome.min.css" rel="stylesheet" media="screen">
 	<link href="css/font-awesome.css" rel="stylesheet" media="screen">
 	<link href="css/simple-line-icons.css" rel="stylesheet" media="screen">
-	<link href="css/animate.css" rel="stylesheet"> 
-	<link href="assets/css/style.css" rel="stylesheet" media="screen">
+	<link href="css/animate.css" rel="stylesheet">
+	<link href="assets/css/style.css" rel="stylesheet" media="screen">	
 	</head>
 <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true&callback=initialize"></script>
 <script src='https://www.google.com/recaptcha/api.js'></script>
@@ -256,6 +255,7 @@ $(document).ready(function() {
 </script>
 <body>
 
+
 <header class="header">
 
 		<nav class="navbar navbar-custom" role="navigation">
@@ -275,11 +275,12 @@ $(document).ready(function() {
 		</nav>
 
 	</header>
-
 <br><br>
 <center><h1>Calculate the distance</h1></center>
 <br>
 <!-- Form for entering loations-->
+<section class="pf-block">
+	<div class="container">
 	<div class="row">
 				<div class="col-md-2">
 				</div>
@@ -288,7 +289,8 @@ $(document).ready(function() {
 				  <div class="form-group">
 				    <input type="text" name="address1" id="address1"size="45dp" class="form-control" onFocus="geolocate()" placeholder="Pickup Address"/>
 				  </div>
-				  <br><br>
+				<br><br>
+				 
  				  <div class="form-group">
 				    <input type="text" name="address1" id="address2" size="45dp" class="form-control" onFocus="geolocate()" placeholder="Delivery Address"/>
 				  </div>
@@ -301,23 +303,20 @@ $(document).ready(function() {
 				</div>
 			</div>
 			<div class="row">
-				<center><div style="width:100%; height:10%" id="deliverycharge"></div></center><br>
+				<center><div style="width:100%; height:20%" id="deliverycharge"></div></center><br>
 				</div>
 							<style type="text/css">
 								 #map-container1 { height: 400px }
 							    </style>
-								</div>
 								
 			<div class="col-md-2">
 			</div>
-			<div id="map-container1" class="col-md-8" style="display:none;"></div>
+			<div id="map-container1" class="col-md-8" style="display:none;">
 			</div>
-</div>
+
 <!-- Form for entering loations END-->
-
-
-  </div>
 </div>
+</section>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAVOB6qYFgyFWHkbVi2T3lBE2m8_kxQmgI&signed_in=true&libraries=places&callback=initAutocomplete"
         async defer></script>
 </body>
