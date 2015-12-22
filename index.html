@@ -1,11 +1,18 @@
 <html>
 <head>
-<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
+
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="">
+	<meta name="author" content="">
+	<title>Calculator</title>
+	
+	<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
 	<link href="css/font-awesome.min.css" rel="stylesheet" media="screen">
 	<link href="css/font-awesome.css" rel="stylesheet" media="screen">
 	<link href="css/simple-line-icons.css" rel="stylesheet" media="screen">
 	<link href="css/animate.css" rel="stylesheet">
-	<link href="assets/css/style.css" rel="stylesheet" media="screen">	
+	<link href="css/style.css" rel="stylesheet" media="screen">	
 	</head>
 <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true&callback=initialize"></script>
 <script src='https://www.google.com/recaptcha/api.js'></script>
@@ -275,13 +282,22 @@ $(document).ready(function() {
 		</nav>
 
 	</header>
-<br><br>
-<center><h1>Calculate the distance</h1></center>
-<br>
+
 <!-- Form for entering loations-->
-<section class="pfblock">
+<section class="pfblock pfblock-gray">
 	<div class="container">
 	<div class="row">
+	
+				<div class="col-md-10 col-sm-offset-1">
+
+					<div class="pfblock-header wow fadeInUp">
+						<h2 class="pfblock-title">Calculate the distance</h2>
+						<div class="pfblock-line"></div>
+					</div>
+				</div>
+				</div>
+				
+			<div class="row">
 				<div class="col-md-2">
 				</div>
 				<div class="col-md-8">
@@ -317,17 +333,18 @@ $(document).ready(function() {
 <!-- Form for entering loations END-->
 </div>
 </section>
-<script src="assets/js/jquery-1.11.1.min.js"></script>
-	<script src="assets/bootstrap/js/bootstrap.min.js"></script>
-	<script src="assets/js/jquery.parallax-1.1.3.js"></script>
-	<script src="assets/js/imagesloaded.pkgd.js"></script>
-	<script src="assets/js/jquery.sticky.js"></script>
-	<script src="assets/js/smoothscroll.js"></script>
-	<script src="assets/js/wow.min.js"></script>
-    <script src="assets/js/jquery.easypiechart.js"></script>
-    <script src="assets/js/waypoints.min.js"></script>
-    <script src="assets/js/jquery.cbpQTRotator.js"></script>
-	<script src="assets/js/custom.js"></script>
+
+<script src="js/jquery-1.11.1.min.js"></script>
+	<script src="bootstrap/js/bootstrap.min.js"></script>
+	<script src="js/jquery.parallax-1.1.3.js"></script>
+	<script src="js/imagesloaded.pkgd.js"></script>
+	<script src="js/jquery.sticky.js"></script>
+	<script src="js/smoothscroll.js"></script>
+	<script src="js/wow.min.js"></script>
+    <script src="js/jquery.easypiechart.js"></script>
+    <script src="js/waypoints.min.js"></script>
+    <script src="js/jquery.cbpQTRotator.js"></script>
+	<script src="js/custom.js"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAVOB6qYFgyFWHkbVi2T3lBE2m8_kxQmgI&signed_in=true&libraries=places&callback=initAutocomplete"
         async defer></script>
 </body>
