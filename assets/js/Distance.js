@@ -1,24 +1,4 @@
-<html>
-<head>
-
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<meta name="description" content="">
-	<meta name="author" content="">
-	<title>Calculator</title>
-	
-	<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
-	<link href="css/font-awesome.min.css" rel="stylesheet" media="screen">
-	<link href="css/font-awesome.css" rel="stylesheet" media="screen">
-	<link href="css/simple-line-icons.css" rel="stylesheet" media="screen">
-	<link href="css/animate.css" rel="stylesheet">
-	<link href="css/style.css" rel="stylesheet" media="screen">	
-	</head>
-<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true&callback=initialize"></script>
-<script src='https://www.google.com/recaptcha/api.js'></script>
-<script src='https://www.google.com/recaptcha/api.js?hl=en'></script>
-<script type="text/javascript">
-	var location1;
+var location1;
 	var location2;
 	
 	var address1;
@@ -52,6 +32,7 @@
 		{
 			// finding out the coordinates
 			
+			document.getElementById('address12').style.display = "block";
 			document.getElementById('map-container1').style.display = "block";
 			
 			if (geocoder) 
@@ -86,6 +67,7 @@
 		else
 		{
 			document.getElementById("deliverycharge").innerHTML = "<br><div class=\"alert alert-danger\">Goods will be delivered only in Bangalore.</div>";
+			document.getElementById('address12').style.display = "none";
 			document.getElementById('map-container1').style.display = "none";
 		}
 	}
@@ -174,7 +156,16 @@
 				delivery_charge2 = delivery_charge2 + (10 - (delivery_charge2%10));
 				}
 				
-				document.getElementById("deliverycharge").innerHTML = "<br><div class=\"alert alert-info\"><font size=\"4dp\">Signature: </font><font color=\"red\">Rs. "+delivery_charge1+"</font>.&nbsp;&nbsp;&nbsp;&nbsp;<font size=\"4dp\">Express:</font> <font color=\"red\">Rs. "+delivery_charge2+"</font>. <font size=\"4dp\">Distance:</font> <font color=\"red\">"+distance_ceil+"km</font></div>";
+				document.getElementById("deliverycharge").innerHTML = "<br><div class=\"alert alert-info\"><br>Signature: <font color=\"red\">Rs. "+delivery_charge1+"</font>.&nbsp;&nbsp;&nbsp;&nbsp;Express: <font color=\"red\">Rs. "+delivery_charge2+"</font>.<br>This is an estimated delivery charge. The actual charges may vary based on any special delivery requirements specified. We will confirm the final amount before pickup.<br><font color=\"red\">Signature deliveries are accepted only till 2 PM.</font><br><font color=\"green\">Signature</font>: The package will be delivered before 8pm on the same business day. Any acknowledgments, cash,etc will be delivered back the next day.<br><font color=\"green\">Express</font>: The package will delivered within 2 hours of pickup. Any acknowledgments, cash, etc will be delivered immediately after the delivery.<br></div>";
+			}
+			
+			if(distance_ceil==0)
+			{
+				if(clicked_id==="booknow")
+			{
+				document.getElementById('address12').style.display = "none";
+				document.getElementById('map-container1').style.display = "none";
+			}
 			}
 			}
 		});
@@ -207,7 +198,7 @@ function initAutocomplete() {
 
 	autocomplete2 = new google.maps.places.Autocomplete(
       /** @type {!HTMLInputElement} */(document.getElementById('address2')),
-      options);
+      {types: ['geocode']});
   // When the user selects an address from the dropdown, populate the address
   // fields in the form.
   autocomplete1.addListener('place_changed', fillInAddress);
@@ -235,9 +226,7 @@ function geolocate() {
   }
 }
 // [END region_geolocation]
-</script>
 
-<script>
 $(document).ready(function() {
     $('#validation')
         .formValidation({
@@ -259,93 +248,60 @@ $(document).ready(function() {
             }
         })
 });
-</script>
-<body>
 
 
-<header class="header">
+ goog_snippet_vars = function() {
+    var w = window;
+    w.google_conversion_id = 938495377;
+    w.google_conversion_label = "RI-lCJ-_02IQkZvBvwM";
+    w.google_conversion_value = 40.00;
+    w.google_conversion_currency = "INR";
+    w.google_remarketing_only = false;
+  }
+  
+  
+function validateForm() {
+    var x = document.forms["myForm"]["email1"].value;
+    var atpos = x.indexOf("@");
+    var dotpos = x.lastIndexOf(".");
+    if (atpos<1 || dotpos<atpos+2 || dotpos+2>=x.length) {
+        alert("Not a valid e-mail address");
+        return false;
+    }
+}
 
-		<nav class="navbar navbar-custom" role="navigation">
 
-			<div class="container">
-
-				<div class="navbar-header">
-				</div>
-
-				<div class="collapse navbar-collapse" id="custom-collapse">
-					<ul class="nav navbar-nav navbar-right">
-					</ul>
-				</div>
-			</div>
-			<!-- .container -->
-
-		</nav>
-
-	</header>
-
-<!-- Form for entering loations-->
-<section class="pfblock pfblock-gray">
-	<div class="container">
-	<div class="row">
+function setValue(){
+    document.myForm.address1.value = address1;
+	document.myForm.address2.value = address2;
+	document.myForm.weight_ceil.value = weight_ceil;
+	var cost = $("input[name=mode1]:checked").val();
 	
-				<div class="col-md-10 col-sm-offset-1">
+	if(cost==="Signature")
+	document.myForm.delivery_charge.value = delivery_charge1;
 
-					<div class="pfblock-header wow fadeInUp">
-						<h2 class="pfblock-title">Calculate the distance</h2>
-						<div class="pfblock-line"></div>
-					</div>
-				</div>
-				</div>
-				
-			<div class="row">
-				<div class="col-md-2">
-				</div>
-				<div class="col-md-8">
-				<center><form class="form-inline" role="form">
-				  <div class="form-group">
-				    <input type="text" name="address1" id="address1"size="45dp" class="form-control" onFocus="geolocate()" placeholder="Pickup Address"/>
-				  </div>
-				&nbsp;&nbsp;&nbsp;
-				 
- 				  <div class="form-group">
-				    <input type="text" name="address1" id="address2" size="45dp" class="form-control" onFocus="geolocate()" placeholder="Delivery Address"/>
-				  </div>
-				</center>	<br>
-				<center><input type="number" min="1" name="weight" id="weight" size="10dp" placeholder="Weight"/></center><br>
-				<center>
-					<input type="button" class="btn btn-primary btn-lg" value="Book Now" id="booknow" onClick="initialize(this.id)"/>
-				</center>
-				</form>
-				</div>
-			</div>
-			<div class="row">
-				<center><div style="width:100%; height:20%" id="deliverycharge"></div></center><br>
-				</div>
-							<style type="text/css">
-								 #map-container1 { height: 400px }
-							    </style>
-								
-			<div class="col-md-2">
-			</div>
-			<div id="map-container1" class="col-md-8" style="display:none;">
-			</div>
+	else if(cost==="Express")
+	document.myForm.delivery_charge.value = delivery_charge2;
+	
+    goog_snippet_vars();
+    window.google_conversion_format = "3";
+    window.google_is_call = true;
+    var opt = new Object();
+    opt.onload_callback = function() {
+    if (typeof(url) != 'undefined') {
+      window.location = url;
+    }
+  }
+  var conv_handler = window['google_trackConversion'];
+  if (typeof(conv_handler) == 'function') {
+    conv_handler(opt);
+  }
 
-<!-- Form for entering loations END-->
-</div>
-</section>
+	
+    //document.getElementById("myForm").submit();
+}
 
-<script src="js/jquery-1.11.1.min.js"></script>
-	<script src="bootstrap/js/bootstrap.min.js"></script>
-	<script src="js/jquery.parallax-1.1.3.js"></script>
-	<script src="js/imagesloaded.pkgd.js"></script>
-	<script src="js/jquery.sticky.js"></script>
-	<script src="js/smoothscroll.js"></script>
-	<script src="js/wow.min.js"></script>
-    <script src="js/jquery.easypiechart.js"></script>
-    <script src="js/waypoints.min.js"></script>
-    <script src="js/jquery.cbpQTRotator.js"></script>
-	<script src="js/custom.js"></script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAVOB6qYFgyFWHkbVi2T3lBE2m8_kxQmgI&signed_in=true&libraries=places&callback=initAutocomplete"
-        async defer></script>
-</body>
-</html>
+            addEventListener('load', prettyPrint, false);
+            $(document).ready(function(){
+            $('pre').addClass('prettyprint linenums');
+                  });
