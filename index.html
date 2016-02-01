@@ -1,168 +1,132 @@
-<!--
+<?php
 /*
+
 require_once "recaptchalib.php";
 
 $check_submission=0;
 
 if(isset($_POST['submit_book']))
 { 
-	// your secret key
-	$secret = "6Lf1XxMTAAAAAG9OXkH5OqM4-0-YONrKm5gCNk3_";
-	// empty response
-	$response = null;
-	// check secret key
-	$reCaptcha = new ReCaptcha($secret);
+  // your secret key
+  $secret = "6Lf1XxMTAAAAAG9OXkH5OqM4-0-YONrKm5gCNk3_";
+  // empty response
+  $response = null;
+  // check secret key
+  $reCaptcha = new ReCaptcha($secret);
 
-	// if submitted check response
-	if ($_POST["g-recaptcha-response"]) {
-    	$response = $reCaptcha->verifyResponse(
+  // if submitted check response
+  if ($_POST["g-recaptcha-response"]) {
+      $response = $reCaptcha->verifyResponse(
         $_SERVER["REMOTE_ADDR"],
         $_POST["g-recaptcha-response"]
-    	);
-	}
+      );
+  }
 
-	if ($response != null && $response->success) {
-	   	$name1 = $_POST['name1'];
-		$email1 = $_POST['email1'];
-		$number1 = $_POST['number1'];
-		$type1 = $_POST['type1'];
-		$special1 = $_POST['special1'];
-		//$mode1 = $_POST['mode1'];
-		$address1 = $_POST['address1'];
-		$address2 = $_POST['address2'];
-		$weight_ceil = $_POST['weight_ceil'];
-		$delivery_charge = $_POST['delivery_charge'];
-		
-		
-
-		require 'PHPMailer_5.2.4\class.phpmailer.php';
-		 
-		$mail = new PHPMailer;
-
-		$mail->IsSMTP();      
-		$mail->SMTPDebug = 1;                                // Set mailer to use SMTP
-		$mail->Host = 'smtpout.asia.secureserver.net';  // Specify main and backup server
-		$mail->SMTPAuth = true;                               // Enable SMTP authentication
-		$mail->Username = 'care@simplydelivered.in';                            // SMTP username
-		$mail->Password = 'Abhishek@0811';                           // SMTP password
-		
-		$mail->SetFrom('care@simplydelivered.in', 'Booking from Website'); // FROM
-		
-		$mail->AddAddress('care@simplydelivered.in','Booking');               // Name is optional
-		$mail->Port = 25;
-
-		                                // Set word wrap to 50 characters
-		$mail->IsHTML(true);                                  // Set email format to HTML
-
-		
-		$mail->Body    = 'Name: '.$name1 .'<br>Email: '.$email1.'<br>Number: '.$number1.'<br>Type: '.$type1.'<br>Special Instruction: '.$special1.'<br>Delivery Charge: '.$delivery_charge.'<br>Source: '.$address1.'<br>Destination: '.$address2.'<br>Weight: '.$weight_ceil;
-		
-
-		if(!$mail->Send()) {
-		   echo 'Message could not be sent.';
-		   echo 'Mailer Error: ' . $mail->ErrorInfo;
-		   exit;
-		}
-	
-		$username = 'fakhriwild@gmail.com';
-		$hash = 'a16577b2d6985d5f1f5fd3fd126657ed548f2f18';
-		
-		// Message details
-		$numbers = array(919108905901);
-		$sender = urlencode('TXTLCL');
-		$message = rawurlencode(''.$name1.'; '.$number1.'; '.$type1.'; SI '.$special1.'; Rs. '.$delivery_charge.'; S '.$address1.'; D '.$address2.'; W '.$weight_ceil);
-	 
-	    $numbers = implode(',', $numbers);
-		$test=0;
-		// Prepare data for POST request
-		$data = array('username' => $username, 'hash' => $hash, 'numbers' => $numbers, "sender" => $sender, "message" => $message,"test"=>$test);
-	 
-		// Send the POST request with cURL
-		$ch = curl_init('http://api.textlocal.in/send/');
-		curl_setopt($ch, CURLOPT_POST, true);
-		curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		$response = curl_exec($ch);
-		curl_close($ch);
-			
-		$name1= str_replace(' ', '_', $name1);
-		$number1 = str_replace(' ', '_', $number1);
-		$type1 = str_replace(' ', '_', $type1);
-		$special1 = str_replace(' ', '_',$special1);
-		$mode1 = str_replace(' ', '_', $mode1);
-		$address1 = str_replace(' ', '_', $address1);
-		$address2 = str_replace(' ', '_', $address2);
-		$weight_ceil = str_replace(' ', '_', $weight_ceil);
-		$delivery_charge = str_replace(' ', '_', $delivery_charge);
-
-		$message = ''.$name1.';'.$number1.';'.$type1.';SI:'.$special1.';Rs.'.$delivery_charge.';S:'.$address1.';D:'.$address2.';W:'.$weight_ceil;
-		$url = "http://hp.bulksms1.com/sms/user/urlsms.php?username=HP1262&pass=htY6*ES&senderid=060000&message=".$message."&dest_mobileno=919108905901&response=Y"; 
-		$ch = curl_init($url);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		$curl_scraped_page = curl_exec($ch); 
-		curl_close($ch); 
-		//echo $curl_scraped_page;
-
-		
-
-
-	   $check_submission = 1;
-	}
-	else {
-		$check_submission = 2;
-	}
-}
-
-*/
-/*
-if(isset($_POST['c_message']) && !empty($_POST['c_email']) && !empty($_POST['c_message'])){
-
-	$name = $_POST['c_name'];
-	$email = $_POST['c_email'];
-	$message = $_POST['c_message'];
+  if ($response != null && $response->success) {
+    $sender_name  = $_POST['sender_name'];
+    $sender_email  = $_POST['sender_email'];
+    $sender_number  = $_POST['sender_number'];
+    $pickup_address  = $_POST['pickup_address'];
+    $receiver_name  = $_POST['receiver_name'];
+    $receiver_number  = $_POST['receiver_number'];
+    $receiver_email  = $_POST['receiver_email'];
+    $delivery_address  = $_POST['delivery_address'];
+    $type  = $_POST['type1'];
+    $special_instructions  = $_POST['special1'];
+    $address1 = $_POST['address1'];
+    $address2 = $_POST['address2'];
+    $size = $_POST['weight_option'];
+    $delivery_charge = $_POST['delivery_charge'];
     
-	
-	require 'PHPMailer_5.2.4\class.phpmailer.php';
- 
-$mail = new PHPMailer;
+    
 
-$mail->IsSMTP();      
-$mail->SMTPDebug = 1;                                // Set mailer to use SMTP
-$mail->Host = 'smtpout.asia.secureserver.net';  // Specify main and backup server
-$mail->SMTPAuth = true;                               // Enable SMTP authentication
-$mail->Username = 'care@simplydelivered.in';                            // SMTP username
-$mail->Password = 'Abhishek@0811';                           // SMTP password
-//$mail->SMTPSecure = 'tls';                            // Enable encryption, 'ssl' also accepted
+    require 'PHPMailer_5.2.4\class.phpmailer.php';
+     
+    $mail = new PHPMailer;
 
-//$mail->From = 'fakhriwild@gmail.com';
-//$mail->FromName = 'Something';
-$mail->SetFrom('care@simplydelivered.in', 'Response From Website'); // FROM
-//$mail->AddAddress('josh@example.net', 'Josh Adams');  // Add a recipient
-$mail->AddAddress('care@simplydelivered.in','Fakhruddin');               // Name is optional
-$mail->Port = 25;
+    $mail->IsSMTP();      
+    $mail->SMTPDebug = 1;                                // Set mailer to use SMTP
+    $mail->Host = 'smtpout.asia.secureserver.net';  // Specify main and backup server
+    $mail->SMTPAuth = true;                               // Enable SMTP authentication
+    $mail->Username = 'care@simplydelivered.in';                            // SMTP username
+    $mail->Password = 'Abhishek@0811';                           // SMTP password
+    
+    $mail->SetFrom('care@simplydelivered.in', 'Booking from Website'); // FROM
+    
+    $mail->AddAddress('care@simplydelivered.in','Booking');               // Name is optional
+    $mail->Port = 25;
 
-//$mail->WordWrap = 50;                                 // Set word wrap to 50 characters
-$mail->IsHTML(true);                                  // Set email format to HTML
+                                    // Set word wrap to 50 characters
+    $mail->IsHTML(true);                                  // Set email format to HTML
 
-//$mail->Subject = 'Here is the subject';
-$mail->Body    = 'Name: '.$name .'<br>Email: '.$email.'<br>Message: '.$message;
-//$mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
+    
+    $mail->Body    = 'Sender\'s Name: '.$sender_name .'<br>Sender\'s Email: '.$sender_email.'<br>Sender\'s Number: '.$sender_number.'Receiver\'s Name: '.$Receiver_name .'<br>Receiver\'s Email: '.$receiver_email.'<br>Receiver\'s Number: '.$receiver_number.'<br>Type: '.$type1.'<br>Special Instruction: '.$special1.'<br>Delivery Charge: '.$delivery_charge.'<br>Pickup: '.$address1.'<br>Delivery: '.$address2.'<br>Size: '.$size;
+    
 
-if(!$mail->Send()) {
-   echo 'Message could not be sent.';
-   echo 'Mailer Error: ' . $mail->ErrorInfo;
-   exit;
-}
-$check =1;
-}
+    if(!$mail->Send()) {
+       echo 'Message could not be sent.';
+       echo 'Mailer Error: ' . $mail->ErrorInfo;
+       exit;
+    }
+  
+    //$username = 'fakhriwild@gmail.com';
+    //$hash = 'a16577b2d6985d5f1f5fd3fd126657ed548f2f18';
+    
+    // Message details
+    //$numbers = array(919108905901);
+    //$sender = urlencode('TXTLCL');
+    //$message = rawurlencode(''.$name1.'; '.$number1.'; '.$type1.'; SI '.$special1.'; Rs. '.$delivery_charge.'; S '.$address1.'; D '.$address2.'; W '.$weight_ceil);
+   
+      //$numbers = implode(',', $numbers);
+    //$test=0;
+    // Prepare data for POST request
+    //$data = array('username' => $username, 'hash' => $hash, 'numbers' => $numbers, "sender" => $sender, "message" => $message,"test"=>$test);
+   
+    // Send the POST request with cURL
+    //$ch = curl_init('http://api.textlocal.in/send/');
+    //curl_setopt($ch, CURLOPT_POST, true);
+    //curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+    //curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    //$response = curl_exec($ch);
+    //curl_close($ch);
+      
+    $receiver_name= str_replace(' ', '_', $receiver_name);
+    $receiver_number= str_replace(' ', '_', $receiver_number);
+    $receiver_email= str_replace(' ', '_', $receiver_email);
+    $pickup_address= str_replace(' ', '_', $pickup_address);
 
-else{
-	$check=0;
-}
+    $sender_name= str_replace(' ', '_', $sender_name);
+    $sender_number= str_replace(' ', '_', $sender_number);
+    $sender_email= str_replace(' ', '_', $sender_email);
+    $delivery_address= str_replace(' ', '_', $delivery_address);
+
+    $special1 = str_replace(' ', '_',$special1);
+    $mode1 = str_replace(' ', '_', $mode1);
+    $address1 = str_replace(' ', '_', $address1);
+    $address2 = str_replace(' ', '_', $address2);
+    $size = str_replace(' ', '_', $size);
+    $delivery_charge = str_replace(' ', '_', $delivery_charge);
+
+    $message = ''.$name1.';'.$number1.';'.$type1.';SI:'.$special1.';Rs.'.$delivery_charge.';S:'.$address1.';D:'.$address2.';W:'.$weight_ceil;
+    $url = "http://hp.bulksms1.com/sms/user/urlsms.php?username=HP1262&pass=htY6*ES&senderid=060000&message=".$message."&dest_mobileno=919108905901&response=Y"; 
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $curl_scraped_page = curl_exec($ch); 
+    curl_close($ch); 
+    //echo $curl_scraped_page;
+
+    
+
+
+     $check_submission = 1;
+  }
+
+  else {
+    $check_submission = 2;
+  }
 */
+//}
 ?>
--->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -220,6 +184,14 @@ h1 {
 z {
     font-family: myFirstFont;
 }
+
+#weight_option{
+  width:130px;
+}
+
+#weight_option option{
+  width:130px;
+}
 </style>
 
 
@@ -266,13 +238,116 @@ window.twttr = (function(d, s, id) {
 	(function(){"use strict";var root=this,WASHAREBTN=function(){this.buttons=[],this.isIos===!0&&this.cntLdd(window,this.crBtn)};WASHAREBTN.prototype.isIos=navigator.userAgent.match(/Android|iPhone/i)&&!navigator.userAgent.match(/iPod|iPad/i)?!0:!1,WASHAREBTN.prototype.cntLdd=function(win,fn){var done=!1,top=!0,doc=win.document,root=doc.documentElement,add=doc.addEventListener?"addEventListener":"attachEvent",rem=doc.addEventListener?"removeEventListener":"detachEvent",pre=doc.addEventListener?"":"on",init=function(e){("readystatechange"!==e.type||"complete"===doc.readyState)&&(("load"===e.type?win:doc)[rem](pre+e.type,init,!1),!done&&(done=!0)&&fn.call(win,e.type||e))},poll=function(){try{root.doScroll("left")}catch(e){return void setTimeout(poll,50)}init("poll")};if("complete"===doc.readyState)fn.call(win,"lazy");else{if(doc.createEventObject&&root.doScroll){try{top=!win.frameElement}catch(e){}top&&poll()}doc[add](pre+"DOMContentLoaded",init,!1),doc[add](pre+"readystatechange",init,!1),win[add](pre+"load",init,!1)}},WASHAREBTN.prototype.addStyling=function(){var s=document.createElement("style"),c="body,html{padding:0;margin:0;height:100%;width:100%}.wa_btn{background-image:url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+DQo8c3ZnIHZlcnNpb249IjEuMSIgaWQ9IkViZW5lXzEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4Ig0KCSB3aWR0aD0iMTZweCIgaGVpZ2h0PSIxNnB4IiB2aWV3Qm94PSIwIDAgMTYgMTYiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDE2IDE2IiB4bWw6c3BhY2U9InByZXNlcnZlIj4NCjxnPg0KCTxnPg0KCQk8cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsaXAtcnVsZT0iZXZlbm9kZCIgZmlsbD0iI0ZGRkZGRiIgZD0iTTguMTI5LDAuOTQ1Yy0zLjc5NSwwLTYuODcyLDMuMDc3LTYuODcyLDYuODczDQoJCQljMCwxLjI5OCwwLjM2LDIuNTEyLDAuOTg2LDMuNTQ5bC0xLjI0LDMuNjg4bDMuODA1LTEuMjE5YzAuOTg0LDAuNTQ0LDIuMTE2LDAuODU0LDMuMzIxLDAuODU0YzMuNzk1LDAsNi44NzEtMy4wNzUsNi44NzEtNi44NzENCgkJCVMxMS45MjQsMC45NDUsOC4xMjksMC45NDV6IE04LjEyOSwxMy41MzhjLTEuMTYyLDAtMi4yNDQtMC4zNDgtMy4xNDctMC45NDZsLTIuMTk4LDAuNzA1bDAuNzE1LTIuMTI0DQoJCQljLTAuNjg2LTAuOTQ0LTEuMDktMi4xMDMtMS4wOS0zLjM1NGMwLTMuMTU1LDIuNTY2LTUuNzIyLDUuNzIxLTUuNzIyczUuNzIxLDIuNTY2LDUuNzIxLDUuNzIyUzExLjI4MywxMy41MzgsOC4xMjksMTMuNTM4eg0KCQkJIE0xMS4zNTIsOS4zNzljLTAuMTc0LTAuMDk0LTEuMDItMC41NS0xLjE3OC0wLjYxNUMxMC4wMTQsOC43LDkuODk4LDguNjY2LDkuNzc1LDguODM3QzkuNjUyLDkuMDA3LDkuMzAxLDkuMzksOS4xOTMsOS41MDUNCgkJCUM5LjA4OCw5LjYxNyw4Ljk4NCw5LjYyOSw4LjgxMiw5LjUzM2MtMC4xNzEtMC4wOTYtMC43My0wLjMtMS4zNzgtMC45MjNjLTAuNTA0LTAuNDg0LTAuODM0LTEuMDcyLTAuOTMtMS4yNTINCgkJCWMtMC4wOTUtMC4xOCwwLTAuMjcxLDAuMDkxLTAuMzU0QzYuNjc3LDYuOTI4LDYuNzc4LDYuODA1LDYuODcsNi43MDZjMC4wOTEtMC4xLDAuMTI0LTAuMTcxLDAuMTg3LTAuMjg2DQoJCQljMC4wNjItMC4xMTUsMC4wMzgtMC4yMTgtMC4wMDMtMC4zMDhDNy4wMTIsNi4wMjMsNi42OTQsNS4xNDYsNi41NjEsNC43OUM2LjQyOCw0LjQzNCw2LjI4LDQuNDg2LDYuMTc3LDQuNDgyDQoJCQlDNi4wNzUsNC40NzksNS45NTgsNC40NTksNS44NDEsNC40NTZDNS43MjQsNC40NTEsNS41MzMsNC40ODcsNS4zNjYsNC42NTdjLTAuMTY3LDAuMTctMC42MzcsMC41NzYtMC42NjksMS40MzkNCgkJCXMwLjU2NSwxLjcyMiwwLjY0OCwxLjg0MWMwLjA4NCwwLjEyMSwxLjE0LDEuOTkxLDIuODk3LDIuNzYyYzEuNzU2LDAuNzcsMS43NjYsMC41MzQsMi4wODgsMC41MTgNCgkJCWMwLjMyMi0wLjAxOCwxLjA1NS0wLjM4NiwxLjIxNS0wLjc4OWMwLjE2Mi0wLjQwNSwwLjE3Ni0wLjc1NSwwLjEzNS0wLjgzMUMxMS42MzksOS41MjEsMTEuNTIzLDkuNDc1LDExLjM1Miw5LjM3OXoiLz4NCgk8L2c+DQo8L2c+DQo8L3N2Zz4NCg==);border:1px solid rgba(0,0,0,.1);display:inline-block!important;position:relative;font-family:Arial,sans-serif;letter-spacing:.4px;cursor:pointer;font-weight:400;text-transform:none;color:#fff;border-radius:2px;background-color:#5cbe4a;background-repeat:no-repeat;line-height:1.2;text-decoration:none;text-align:left}.wa_btn_s{font-size:12px;background-size:16px;background-position:5px 2px;padding:3px 6px 3px 25px}.wa_btn_m{font-size:16px;background-size:20px;background-position:4px 2px;padding:4px 6px 4px 30px}.wa_btn_l{font-size:16px;background-size:20px;background-position:5px 5px;padding:8px 6px 8px 30px}";return s.type="text/css",s.styleSheet?s.styleSheet.cssText=c:s.appendChild(document.createTextNode(c)),s},WASHAREBTN.prototype.setButtonAttributes=function(b){var url=b.getAttribute("data-href"),text="?text="+encodeURIComponent(b.getAttribute("data-text"))+(b.getAttribute("data-text")?"%20":"");return text+=encodeURIComponent(url?url:document.URL),b.setAttribute("target","_top"),b.setAttribute("href",b.getAttribute("href")+text),b.setAttribute("onclick","window.parent."+b.getAttribute("onclick")),b},WASHAREBTN.prototype.setIframeAttributes=function(b){var i=document.createElement("iframe");return i.width=1,i.height=1,i.button=b,i.style.border=0,i.style.overflow="hidden",i.border=0,i.setAttribute("scrolling","no"),i.addEventListener("load",root.WASHAREBTN.iFrameOnload()),i},WASHAREBTN.prototype.iFrameOnload=function(){return function(){this.contentDocument.body.appendChild(this.button),this.contentDocument.getElementsByTagName("head")[0].appendChild(root.WASHAREBTN.addStyling());var meta=document.createElement("meta");meta.setAttribute("charset","utf-8"),this.contentDocument.getElementsByTagName("head")[0].appendChild(meta),this.width=Math.ceil(this.contentDocument.getElementsByTagName("a")[0].getBoundingClientRect().width),this.height=Math.ceil(this.contentDocument.getElementsByTagName("a")[0].getBoundingClientRect().height)}},WASHAREBTN.prototype.crBtn=function(){for(var b=[].slice.call(document.querySelectorAll(".wa_btn")),iframes=[],i=0;i<b.length;i++)root.WASHAREBTN.buttons.push(b[i]),b[i]=root.WASHAREBTN.setButtonAttributes(b[i]),iframes[i]=root.WASHAREBTN.setIframeAttributes(b[i]),b[i].parentNode.insertBefore(iframes[i],b[i])},root.WASHAREBTN=new WASHAREBTN}).call(this);
 </script>
 
-<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true&callback=initialize"></script>
-
+<!--<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true&callback=initialize"></script>-->
+<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false&libraries=places"></script>
 <script type="text/javascript">
-	
 
-/*
-	var location1;
+
+  var source, destination;
+  var distance_ceil;
+    var directionsDisplay;
+    var directionsService = new google.maps.DirectionsService();
+    google.maps.event.addDomListener(window, 'load', function () 
+    {
+        new google.maps.places.SearchBox(document.getElementById('address1'));
+        new google.maps.places.SearchBox(document.getElementById('address2'));
+        directionsDisplay = new google.maps.DirectionsRenderer({ 'draggable': true });
+    });
+
+    function GetRoute() {
+            var mumbai = new google.maps.LatLng(18.9750, 72.8258);
+            var mapOptions = {
+                types: ['(Bangalore)'],
+                componentRestrictions: {country: "in"},
+                zoom: 1,
+                center: mumbai
+            };
+            map = new google.maps.Map(document.getElementById('map-container1'), mapOptions);
+            directionsDisplay.setMap(map);
+           // directionsDisplay.setPanel(document.getElementById('dvPanel'));
+
+            //*********DIRECTIONS AND ROUTE**********************//
+            source = document.getElementById("address1").value;
+            destination = document.getElementById("address2").value;
+
+
+            var request = {
+                origin: source,
+                destination: destination,
+                travelMode: google.maps.TravelMode.DRIVING
+            };
+            directionsService.route(request, function (response, status) {
+                if (status == google.maps.DirectionsStatus.OK) {
+                    directionsDisplay.setDirections(response);
+                }
+            });
+
+            //*********DISTANCE AND DURATION**********************//
+            var service = new google.maps.DistanceMatrixService();
+            service.getDistanceMatrix({
+                origins: [source],
+                destinations: [destination],
+                travelMode: google.maps.TravelMode.DRIVING,
+                unitSystem: google.maps.UnitSystem.METRIC,
+                avoidHighways: false,
+                avoidTolls: false
+            }, function (response, status) {
+                if (status == google.maps.DistanceMatrixStatus.OK && response.rows[0].elements[0].status != "ZERO_RESULTS") {
+                    var distance = response.rows[0].elements[0].distance.text;
+                    var duration = response.rows[0].elements[0].duration.text;
+                    //var dvDistance = document.getElementById("dvDistance");
+                    //dvDistance.innerHTML = "";
+                    //dvDistance.innerHTML += "Distance: " + distance + "<br />";
+                    //dvDistance.innerHTML += "Duration:" + duration;
+
+                    var weight_ceil = document.getElementById('weight_option');
+                    weight_ceil = weight_ceil.options[weight_ceil.selectedIndex].value;
+                    var delivery_charge=10;
+                    var distance_in_num = parseFloat(distance.substring(0,distance.length-3)).toFixed(2);
+                    
+                     if(distance_in_num<=5.00)
+                    {
+                      switch(weight_ceil)
+                      {
+                        case 'S': { delivery_charge = 60; break;}
+                        case 'M': { delivery_charge = 75; break;}
+                        case 'L': { delivery_charge = 85; break;}
+                        case 'XL': { delivery_charge = 100; break;}
+                        case 'XXL': { delivery_charge = 150; break;}
+                      }
+                    }
+
+                    else
+                    {
+                      switch(weight_ceil)
+                      {
+                        case 'S': { delivery_charge = 60+ ( (distance_in_num-5) * 10 ); break;}
+                        case 'M': { delivery_charge = 75+ ( (distance_in_num-5) * 12 ); break;}
+                        case 'L': { delivery_charge = 85+ ( (distance_in_num-5) * 15 ); break;}
+                        case 'XL': { delivery_charge = 100+( (distance_in_num-5) * 20 ); break;}
+                        case 'XXL': { delivery_charge = 150+( (distance_in_num-5) * 30 ); break;}
+                      } 
+                    }
+                    
+
+                document.getElementById("deliverycharge").innerHTML="<br><div class=\"alert alert-info\"> Delivery charge = Rs. "+delivery_charge.toFixed(2)+"<br>Distance = "+distance_in_num+" KM</div>";
+
+
+                } else {
+                    alert("Unable to find the distance via road.");
+                }
+            });
+
+    document.getElementById('address12').style.display = "block";
+    document.getElementById('map-container1').style.display = "block";
+      
+    
+	}
+
+
+
+  /*
+  var location1;
 	var location2;
 	
 	var address1;
@@ -445,7 +520,7 @@ window.twttr = (function(d, s, id) {
 		});
 		
 	}
-
+*/
 // This example displays an address form, using the autocomplete feature
 // of the Google Places API to help users fill in the information.
 
@@ -458,28 +533,6 @@ var componentForm = {
   country: 'long_name',
   postal_code: 'short_name'
 };*/
-
- function init_map() {
-		var myLocation = new google.maps.LatLng(13.04352,77.55261);
-		  
-        var mapOptions = {
-          center: myLocation,
-          zoom: 14
-        };
-		
-		var marker = new google.maps.Marker({
-			position: myLocation,
-			title:"Simply Delivered"});
-			
-        var map = new google.maps.Map(document.getElementById("map-container"),
-            mapOptions);
-		
-		marker.setMap(map);	
-
-      }
-	  
-      google.maps.event.addDomListener(window, 'load', init_map);
-
 
 function initAutocomplete() {
   // Create the autocomplete object, restricting the search to geographical
@@ -494,7 +547,7 @@ function initAutocomplete() {
 
 	autocomplete2 = new google.maps.places.Autocomplete(
       /** @type {!HTMLInputElement} */(document.getElementById('address2')),
-      {types: ['geocode']});
+      options);
   // When the user selects an address from the dropdown, populate the address
   // fields in the form.
   autocomplete1.addListener('place_changed', fillInAddress);
@@ -602,27 +655,12 @@ function setValue(){
             $('pre').addClass('prettyprint linenums');
                   });
 
+            $('.selectpicker').selectpicker({
+            style: 'btn-info',
+            size: 4
+            });
 
-function init_map() {
-		var myLocation = new google.maps.LatLng(13.04352,77.55261);
-		  
-        var mapOptions = {
-          center: myLocation,
-          zoom: 14
-        };
-		
-		var marker = new google.maps.Marker({
-			position: myLocation,
-			title:"Simply Delivered"});
-			
-        var map = new google.maps.Map(document.getElementById("map-container"),
-            mapOptions);
-		
-		marker.setMap(map);	
 
-      }
-	  
-      google.maps.event.addDomListener(window, 'load', init_map);
 
 </script>
 
@@ -661,13 +699,13 @@ if(typeof wabtn4fg==="undefined"){
 		<div id="status"></div>
 	</div>
 
-	<!-- Home start -->
+	<!-- Home start
 
 	<section id="home" class="pfblock-image screen-height">
         <div class="home-overlay"></div>
 		<div class="intro">
-			<!-- <div class="start">Hello, my name is John Doe and I am</div>
- -->			<z><font size="7dp">BY THE BOX</font></z><br>
+			<! <div class="start">Hello, my name is John Doe and I am</div>
+ 		<z><font size="7dp">BY THE BOX</font></z><br>
 				<f>EASY LOCAL DELIVERIES</f>
 		</div>
 
@@ -681,7 +719,7 @@ if(typeof wabtn4fg==="undefined"){
 
 	</section>
 
-	<!-- Home end -->
+	 Home end -->
 
 	<!-- Navigation start -->
 
@@ -698,21 +736,12 @@ if(typeof wabtn4fg==="undefined"){
 						<span class="icon-bar"></span>
 						<span class="icon-bar"></span>
 					</button>
-					&nbsp;&nbsp;<a href="#home"><font size="5px" color="#ffffff"><z>By The Box</z></font></a>
+					&nbsp;&nbsp;<a href="#home"><font size="6px" color="#ffffff"><z>By The Box</z></font></a>
 				</div>
 
 				<div class="collapse navbar-collapse" id="custom-collapse">
 					<ul class="nav navbar-nav navbar-right">
-						<!-- <li><a href="#home"><font size="2px">Home</a></font></li> -->
-						<li><a href="#what_we_do"><font size="2em">What We Do</font></a></li>
-						<!--<li><a href="#portfolio"><font size="2px">Services</font></a></li>-->
-						<li><a href="#why_choose_us"><font size="2px">Why Choose Us?</font></a></li>
-                        <li><a href="#how_it_works"><font size="2px">How It Works</font></a></li>
-                        <li><a href="#pricing"><font size="2px">Pricing</font></a></li>
-                        <li><a href="#delivery_time"><font size="2px">Delivery Time</font></a></li>
-						<li><a href="#contact"><font size="2px">Contact</font></a></li>
-						<!--<li><a href="#book"><font size="2px">+91-9108905901</font></a></li>-->
-						<li><a href="book.php"><b><font size="3px" color="#E7746F">Book</font></b></a></li>
+            						
 					</ul>
 				</div>
 			</div>
@@ -724,576 +753,169 @@ if(typeof wabtn4fg==="undefined"){
 
 	<!-- Navigation end -->
 
+  <!-- Book a Delivery-->
+  <section class="pfblock">    
+    <div class="container">
+      <div class="row">
 
-    <!-- Services start -->
-
-
-
-	<section id="what_we_do" class="pfblock">
-		<div class="container">
-			<div class="row">
-
-				<div class="col-md-10 col-sm-offset-1">
-
-					<div class="pfblock-header wow fadeInUp">
-						<h2 class="pfblock-title">What we do</h2>
-						<div class="pfblock-line"></div>
-					</div>
-					<div class="pfblock-subtitle">
-							<p>Simply Delivered offers same day deliveries in Bangalore for all kinds of parcels. We are your one stop solution for all business deliveries, parcel deliveries, sample deliveries or document deliveries. Whether you are a store looking to deliver your goods to your customers or a stockist who needs to distribute their goods to retailers or an e-commerce store looking for deliveries in Bangalore, we provide services to all of you. </p>
-							<p>Simply Delivered provides on demand delivery in Bangalore without any binding contracts. Once you book a delivery through the website, we confirm the order details and our delivery executive picks up the parcel from your location. Post that, you can track the status of your order through SMS updates while it is delivered the same day. We charge you only for the box/packet that you send with us and not the entire delivery auto/bike. This brings down your delivery costs significantly making us one of the cheapest delivery services in Bangalore. We deliver to all parts of urban Bangalore every weekday so you don't miss out on any delivery.</p>
-				</div>
-				</div>
-				
-
-			</div>
-		</div>
-	</section>
-
-	
-<!--
-	<section id="portfolio" class="pfblock">
-        <div class="container">
-            <div class="row">
-                <div class="pfblock-header wow fadeInUp">
-						<h2 class="pfblock-title">Services</h2>
-						<div class="pfblock-line"></div>
-					</div>
-            </div>
-
-            <div class="row">
-
-            			<center><strong><font size="5dp">Here is an illustrative list of our services</font></strong></center><br><br>
-                
-                <div class="col-sm-4">
-                <div class="grid wow zoomIn">
-                	<div class="portfolio-item">
-                		<center><strong><font size="3dp">Goods Deliveries for Businesses</font></strong></center><br>
-                    <a href="#portfolioModal1" class="portfolio-link" data-toggle="modal">
-                        <div class="caption">
-                            <div class="caption-content">
-                            	<b>Is your business looking to deliver goods to customers? Then you have come to the right place! We deliver all kinds of Electronics, Electrical, Clothing, Stationary,  Plastics, Steel and Utensils and FMCG items for businesses. And we offer deliveries in all parts of Bengaluru throughout the week, so you don't miss out on even a single customers, just because you can't find reliable logistics!.</b>
-                            </div>
-                        </div>
-                        <img src="assets/images/goods.jpg" class="img-responsive" alt="">
-                    </a>
-                    </div>
-                </div>
-                </div>
-
-                <div class="col-sm-4">
-                <div class="grid wow zoomIn">
-                	<div class="portfolio-item">
-                <center><strong><font size="3dp">Pickup and Deliver from your favorite shop</font></strong></center><br>
-                    <a href="#portfolioModal2" class="portfolio-link" data-toggle="modal">
-                        <div class="caption">
-                            <div class="caption-content">
-                              <b>Are you someone who always buys your things from that Wholesale shop in City Market or do you like that faraway apparel store but are always wary of going there to shop? Just let us know the next time you want something and we will pick it up from the store and deliver it at your doorstep. Convenient, isn't it?.</b>
-                              </div>
-                        </div>
-                        <img src="assets/images/pickup.jpg" class="img-responsive" alt="">
-                    </a>
-                     </div>
-                </div>
-                </div>
-
-                <div class="col-sm-4">
-                <div class="grid wow zoomIn">
-                	<div class="portfolio-item">
-                <center><strong><font size="3dp">Parcel Delivery</font></strong></center><br>
-                    <a href="#portfolioModal3" class="portfolio-link" data-toggle="modal">
-                        <div class="caption">
-                            <div class="caption-content">
-                            <b>Deliver any parcel to anyone in the city, from the convenience of your home. Book a delivery and we will come pickup the parcel from you and deliver it on the same day. So next time you want to send those delicious home made cookies to your friends, or return the costume you rented, or send Christmas gifts to your loved ones, or deliver just any parcel, let us know and we will make sure it reaches on time.</b>
-                            </div>
-                        </div>
-                        <img src="assets/images/parcel.jpg" class="img-responsive" alt="">
-                    </a>
-                     </div>
-                </div>
-                </div>
+        <center>
+          <div class="pfblock-header">
+            <h2 class="pfblock-title">Estimate and Book<font size="3dp">(beta)</font></h2>
+            <div class="pfblock-line"></div>
             
-            </div>
+          </div>
+        </center>
+      </div>
 
-            <div class="row">
-            <br>
-                <div class="col-sm-4">
-                <div class="grid wow zoomIn">
-                	<div class="portfolio-item">
-                <center><strong><font size="3dp">Bulk Deliveries</font></strong></center><br>
-                    <a href="#portfolioModal4" class="portfolio-link" data-toggle="modal">
-                        <div class="caption">
-                            <div class="caption-content">
-                               <b>Shopping big time for your new house or delivering your products to a big customer? We can arrange for all your bulk deliveries. Just mention in the special delivery instructions about your requirements and we will make the necessary arrangements.</b>
-                              </div>
-                        </div>
-                        <img src="assets/images/bulk.jpg" class="img-responsive" alt="">
-                    </a>
-                     </div>
-                </div>
-                </div>
-
-                <div class="col-sm-4">
-                <div class="grid wow zoomIn">
-                	<div class="portfolio-item">
-                <center><strong><font size="3dp">Payments Collection</font></strong></center><br>
-                    <a href="#portfolioModal5" class="portfolio-link" data-toggle="modal">
-                        <div class="caption">
-                            <div class="caption-content">
-                             <b>Collecting payments, invoices or acknowledgements from your clients across the city can be a daunting task especially during peak traffic hours! How about letting us do the running around? We will collect all your bills, cheques and cash (up to ₹10,000) and deliver back to you while you save all the time to work on your core business!.</b>
-                             </div>
-                        </div>
-                        <img src="assets/images/payment.jpg" class="img-responsive" alt="">
-                    </a>
-                     </div>
-                </div>
-                </div>
-
-                <div class="col-sm-4">
-                <div class="grid wow zoomIn">
-                	<div class="portfolio-item">
-                <center><strong><font size="3dp">Sample Delivery</font></strong></center><br>
-                    <a href="#portfolioModal6" class="portfolio-link" data-toggle="modal">
-                        <div class="caption">
-                            <div class="caption-content">
-                             <b>Deliver samples of your products and arrange for reverse pickups with Simply Delivered. We can also collect cash on delivery for your products and deliver it back to you along with the acknowledgements.</b>
-                            </div>
-                        </div>
-                        <img src="assets/images/sample.jpg" class="img-responsive" alt="">
-                    </a>
-                     </div>
-                </div>
-                </div>
-            </div>
+      
+<!-- Form for entering loations-->
+  <div class="row">
+        <div class="col-md-12">
+        <div class="col-md-5"> 
+        <div class="alert alert-info">
+        <b>
+        <strong><b>How to get a precise delivery charge estimate</b>:</strong><br>
+        1. Enter the first few letters of your pickup address and select the correct one from the suggestions drop down.<br>
+        2. Do the same for your delivery address.<br>
+        3. If your address doesn't appear in the auto complete options, select a nearest landmark which can be located on the map.<br>
+        4. Enter the approximate weight of the package.<br>
+        5. Click Book Now!
         </div>
-    </section>
--->
+        </div>
 
-		<section id="why_choose_us" class="pfblock  pfblock-gray">
-		<div class="container">		
-			<div class="row">
-
-				<div class="col-md-6 col-sm-offset-3">
-
-					<div class="pfblock-header wow fadeInUp">
-						<h2 class="pfblock-title">Why Choose Us</h2>
-						<div class="pfblock-line"></div>
-					</div>
-				</div>
-			</div>
-			<div class="row">			
-				<div class="col-sm-3">
-
-					<div class="iconbox wow slideInLeft">
-						<div class="iconbox-icon">
-							<!--<span class="icon-magic-wand"></span>-->
-						</div>
-						<div class="iconbox-text">
-							<h3 class="iconbox-title">Simplicity</h3>
-							<div class="iconbox-desc">
-								Deliver your goods around Bangalore in 3 simple steps. Just take a photo of your box, Whatsapp it to our number and give us the pick up & delivery address. That's it.<br>&emsp;
-							</div>
-						</div>
-					</div>
-
-				</div>
-
-				<div class="col-sm-3">
-
-					<div class="iconbox wow slideInLeft">
-						<div class="iconbox-icon">
-							<!--<span class="icon-puzzle"></span>-->
-						</div>
-						<div class="iconbox-text">
-							<h3 class="iconbox-title">Reliability</h3>
-							<div class="iconbox-desc">
-								We know that your goods are valuable. They are valuable for us too. We offer location and status tracking so you don't have to worry about where your goods are. <br>&emsp;
-							</div>
-						</div>
-					</div>
-
-				</div>
-
-				<div class="col-sm-3">
-
-					<div class="iconbox wow slideInRight">
-						<div class="iconbox-icon">
-							<!--<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>-->
-						</div>
-						<div class="iconbox-text">
-							<h3 class="iconbox-title">Affordability</h3>
-							<div class="iconbox-desc">
-								Delivering your goods shouldn't cost you a fortune. We offer competitive pricing by ensuring that you pay only for what you deliver to significantly bring down costs.<br>&emsp;
-							</div>
-						</div>
-					</div>
-
-				</div>
-
-				<div class="col-sm-3">
-
-					<div class="iconbox wow slideInRight">
-						<div class="iconbox-icon">
-							<!--<span class="icon-question"></span>-->
-						</div>
-						<div class="iconbox-text">
-							<h3 class="iconbox-title">Consistency</h3>
-							<div class="iconbox-desc">
-								You can rely on us to deliver your goods every weekday with the same simplicity at the same compelling prices. We offer great service with unmatched consistency.
-							</div>
-						</div>
-					</div>
-
-				</div>
-
-			</div><!-- .row -->
-		</div><!-- .container -->
-	</section>
-
-	<!-- Services end -->
-    
-	<!-- Portfolio start -->
-
-
-
-	<section id="how_it_works" class="pfblock">
-		<div class="container">
-			<div class="row">
-
-				<div class="col-sm-6 col-sm-offset-3">
-
-					<div class="pfblock-header wow fadeInUp">
-						<h2 class="pfblock-title">How It Works</h2>
-						<div class="pfblock-line"></div>
-					</div>
-				</div>
-					<div class="pfblock-subtitle"></div>
-					
-
-				
-
-			</div><!-- .row -->
-            
-            <div class="row">
-                
-                <div class="col-sm-3">
-                    
-                    <div class="grid wow zoomIn">
-                        <figure class="effect-bubba">
-                            <img src="assets/images/booknow.jpg" alt="img01"/>
-                            <h2>STEP <span>1</span></h2>
-                            <figcaption>
-             
-                                <font size="5dp"><p><b>Visit the booking page at <font size="2dp">simplydelivered.in/book</font> or open the Android App</b></p></font>        
-                            </figcaption>			
-                        </figure>
-                    </div>
-                    	<div align="center">
-                    		<div class="fb-share-button" 
-					        	data-href="http://www.simplydelivered.in/#how_it_works" 
-					        	data-layout="button">
-					    	</div>
-					    </div>
-                    
-                </div>
-
-                 <div class="col-sm-3">
-            
-                    <div class="grid wow zoomIn">
-                        <figure class="effect-bubba">
-                            <img src="assets/images/location1.jpg" alt="img01"/>
-                            <h2>STEP <span>2</span></h2>
-                            <figcaption>
-                                
-                                <font size="5dp"><p><b>Enter the pickup and delivery address and the size of your parcel.</b></p></font>
-                            </figcaption>			
-                        </figure>
-                    </div>
-
-                    <div align="center">
-	                    <a class="twitter-share-button"
-		  					href="https://twitter.com/intent/tweet?url=https://simplydelivered.in/#how_it_works"
-		  					data-count="none"
-		  					data-layout="button">
-						Tweet</a>
-                    </div>
-                
-
-                </div>
-                
-                <div class="col-sm-3">
-            
-                    <div class="grid wow zoomIn">
-                        <figure class="effect-bubba">
-                            <img src="assets/images/details.jpg" alt="img01"/>
-                            <h2>STEP <span>3</span></h2>
-                            <figcaption>
-                                
-                                <font size="5dp"><p><b>We will provide an estimated quote for the delivery.</b></p></font>
-                            </figcaption>			
-                        </figure>
-                    </div>
-                </div>
-
-                <div class="col-sm-3">
-            
-                    <div class="grid wow zoomIn">
-                        <figure class="effect-bubba">
-                            <img src="assets/images/contact.jpg" alt="img01"/>
-                            <h2>STEP <span>4</span></h2>
-                            <figcaption>
-                                
-                                <font size="5dp"><p><b>Enter your contact details and confirm the delivery.</b></p></font>
-                            </figcaption>			
-                        </figure>
-                    </div>
-
-                     <div align="center">
-                    <a href="whatsapp://send" data-text="Deliver your goods in 3 simple steps" data-href="http://simplydelivered.in/#how_it_works" class="wa_btn wa_btn_s" style="display:none">Share</a>
-                    </div>
-                </div>
-            </div>
-            <br>
-            
-          
-		</div><!-- .container -->
-
-	</section>
-
-	<!-- Portfolio end -->
-    
-
-	<section id="pricing" class="pfblock pfblock-gray">
-		<div class="container">
-			<div class="row">
-
-				<div class="col-sm-6 col-sm-offset-3">
-					<div class="pfblock-header wow fadeInUp">
-						<h2 class="pfblock-title">Pricing</h2>
-						<div class="pfblock-line"></div>
-					</div>
-
-					<div class="pfblock-subtitle">
-						<p>We have identified 5 different parcel sizes for your convenience. This reduced the time wasted in measuring the exact dimensions or weight every time. Just select which size your parcel fits into and check the corresponding rates of delivery. For a detailed understanding of how the pricing works, see the below chart:</p>
-					
-						<br>
-						<table class="table table-bordered">
-						  <thead>
-						    <tr>
-						      <th rowspan="2"><center>Box Type</center></th>
-						      <th rowspan="2"><center>Size(in feet)</center></th>
-						      <th rowspan="2"><center>size(in CM)</center></th>
-						      <th colspan="2"><center>Delivery Charge</center></th>
-						    </tr>
-
-						    <tr>
-						    	<th><center>Upto 5 KM</center></th>
-						    	<th><center>After 5 KM</center></th>
-						    </tr>
-						  </thead>
-
-						  <tbody>
-						    <tr>
-						      <th scope="row"><center>S</center></th>
-						      <td>1x1x1</td>
-						      <td>30x30x30</td>
-						      <td>60</td>
-						      <td>Rs.12 per KM</td>
-						    </tr>
-
-						    <tr>
-						      <th scope="row"><center>M</center></th>
-						      <td>1x2x1</td>
-						      <td>30x60x30</td>
-						      <td>75</td>
-						      <td>Rs.15 per KM</td>
-						    </tr>
-
-						    <tr>
-						      <th scope="row"><center>L</center></th>
-						      <td>2x2x1</td>
-						      <td>60x60x30</td>
-						      <td>85</td>
-						      <td>Rs.17 per KM</td>
-						    </tr>
-
-						    <tr>
-						      <th scope="row"><center>XL</center></th>
-						      <td>2x2x2</td>
-						      <td>60x60x60</td>
-						      <td>100</td>
-						      <td>Rs.20 per KM</td>
-						    </tr>
-
-
-						    <tr>
-						      <th scope="row"><center>XXL</center></th>
-						      <td>3x2x2</td>
-						      <td>90x60x60</td>
-						      <td>150</td>
-						      <td>Rs.30 per KM</td>
-						    </tr>
-
-						  </tbody>
-					</table>
-
-					</div>
-
-
-
-				</div>
-
-			</div>
-		</div>
-	</section>
-
-
-	<section id="delivery_time" class="pfblock">
-		<div class="container">
-			<div class="row">
-
-				<div class="col-sm-6 col-sm-offset-3">
-					<div class="pfblock-header wow fadeInUp">
-						<h2 class="pfblock-title">Delivery Time</h2>
-						<div class="pfblock-line"></div>
-					</div>
-				
-
-					<div class="pfblock-subtitle">
-						<p>We offer same business day deliveries in Bengaluru. For all the deliveries booked before 1 PM every day, we will pickup the goods by 2 PM and deliver them before 8 PM the same business day. We will keep you updated with the status of the delivery through SMS/Email/WhatsApp. For all the deliveries booked after 1 PM, we will pickup and deliver the goods on the next business day.</p>
-					</div>
-				</div>
-			</div>
-		</div>
-	</section>
-
-    <!--
-
-	<!-- Book a Delivery
-	<section id="book" class="pfblock pfblock-gray">		
-		<div class="container">
-			<div class="row">
-
-				<center>
-					<div class="pfblock-header">
-						<h2 class="pfblock-title">Estimate and Book<font size="3dp">(beta)</font></h2>
-						<div class="pfblock-line"></div>
-						
-					</div>
-				</center>
-			</div>
-
-			
-<! Form for entering loations
-	<div class="row">
-				<div class="col-md-12">
-				<div class="col-md-5"> 
-				<div class="alert alert-info">
-				<strong><b>How to get a precise delivery charge estimate</b>:</strong><br>
-				1. Enter the first few letters of your pickup address and select the correct one from the suggestions drop down.<br>
-				2. Do the same for your delivery address.<br>
-				3. If your address doesn't appear in the auto complete options, select a nearest landmark which can be located on the map.<br>
-				4. Enter the approximate weight of the package.<br>
-				5. Click Book Now!
-				</div>
-				</div>
-
-				<div class="col-md-7">
-				<center><form class="form-inline" role="form">
-				  <div class="form-group">
-				    <input type="text" name="address1" id="address1"size="45dp" class="form-control" onFocus="geolocate()" placeholder="Pickup Address"/>
-				  </div>
-				  &nbsp&nbsp&nbsp&nbsp
- 				  <div class="form-group">
-				    <input type="text" name="address1" id="address2" size="45dp" class="form-control" onFocus="geolocate()" placeholder="Delivery Address"/>
-				  </div>
-				</center>	<br>
-				<center><input type="number" min="1" name="weight" id="weight" size="10dp" placeholder="Weight"/></center><br>
-				<center>
-					<input type="button" class="btn btn-primary btn-lg" value="Book Now" id="booknow" onClick="initialize(this.id)"/>
-				</center>
-				</form>
-				</div>
-				</div>
-	</div>
-				<div class="row">
-				<center><div style="width:100%; height:10%" id="deliverycharge"></div></center><br>
-				</div>
-							<style type="text/css">
-								 #map-container1 { height: 610px }
-							    </style>
+        <div class="col-md-7">
+        <center><form class="form-inline" role="form">
+          <div class="form-group">
+           <input type="text" name="address1" id="address1"size="45dp" class="form-control" placeholder="Pickup Address"/>
+          </div>
+          &nbsp&nbsp&nbsp&nbsp
+          <div class="form-group">
+            <input type="text" name="address1" id="address2" size="45dp" class="form-control" placeholder="Delivery Address"/>
+          </div>
+        </center> <br>
+        <center>
+            <label for="weight_option">Size</label>
+                  <select name="weight_option" class="form-control" id="weight_option" width="12dp">
+                    <option value="S">1x1x1 (S)</option>
+                    <option value="M">1x2x1 (M)</option>
+                    <option value="L">2x2x1 (L)</option>
+                    <option value="XL">2x2x2 (XL)</option>
+                    <option value="XXL">3x2x2 (XXL)</option>
+                </select>
+        </center><br>
+        <center>
+          <input type="button" class="btn btn-primary btn-lg" value="Book Now" id="booknow" onClick="GetRoute()"/>
+        </center>
+        </form>
+        </div>
+        </div>
+  </div>
+        <div class="row">
+        <center><div style="width:50%; height:10%" id="deliverycharge"></div></center><br>
+        </div>
+              <style type="text/css">
+                 #map-container1 { height: 670px }
+                  </style>
 </div>
 
-<! Form for Booking
-			<div class="container">
-			<div class="row">
-			<div id="address12" class="col-md-12" style="display:none;">
-			<div class="col-md-4" >
-			<form name="myForm" id="myForm" method="post">
-				<div class="ajax-hidden">
+<!--Form for Booking-->
+      <div class="container">
+      <div class="row">
+      <div id="address12" class="col-md-12" style="display:none;">
+      <div class="col-md-4" >
+      <form name="myForm" id="myForm" method="post">
+        <div class="ajax-hidden">
 
-				  <div class="form-group">
-				  <label class="sr-only" for="name1">Name</label>
-				    <input type="text" name="name1" id="name1" size="40dp" maxlength="25" class="form-control" required="true"  placeholder="Name"/>
-				  </div>
-				  
-				   <div class="form-group">
-				   <label class="sr-only" for="number1">Contact Number</label>
-				    <input type="text" name="number1" id="number1" size="40dp" class="form-control" pattern="[0-9]{10}" required title="Enter a valid 10 digit number" placeholder="Contact Number"/>
-				  </div>
-				   <div class="form-group">
-				    <label class="sr-only" for="email1">Email</label>
-					<input type="email" id="email1" class="form-control" maxlength="30" name="email1" placeholder="E-mail">
-				  </div>
-				  
-				  <div class="form-group">
-				    <label class="sr-only" for="type1">Type</label>
-					<input type="text" id="type1" class="form-control" maxlength="30" name="type1" placeholder="Type of goods">
-				  </div>
-				  
-				  <div class="form-group">
-					<textarea id="special1" class="form-control" name="special1" rows="3" maxlength="60" placeholder="Special Delivery Instructions:&#10;e.g: Acknowledgement back, Take cash on delivery, delivery charge paid at destination, etc."></textarea>
-				  </div>
-				  
-				  <input type="radio" name="mode1" value="Signature" checked>Signature&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="mode1" value="Express">Express<br><br>
-				  <div class="g-recaptcha" data-sitekey="6Lf1XxMTAAAAAEVris2qlfmdIPw7ZXkWSzkYO32P"></div>
-				  
-				  <input type="hidden" name="address1" id="address1" value="">
-				  <input type="hidden" name="address2" id="address2" value="">
-				  <input type="hidden" name="weight_ceil" id="weight_ceil" value="">
-				  <input type="hidden" name="delivery_charge" id="delivery_charge" value="">
-				  
-				  <font size="1px">By clicking on Confirm Now, you agree to our <a  style="cursor: pointer;" data-toggle="modal" data-target="#myModal">Terms & Conditions</font></a>.<br>
-				  <button class="btn btn-lg btn-block wow fadeInUp" data-wow-delay=".3s" onClick="setValue();" type="submit" name="submit_book" >Confirm Now</button>
-				</div>
-						<div class="ajax-response"></div>
-			</form>
-			<br>
-			<div class="alert alert-info">
-			Need a bulk or customized delivery or just prefer old school? You can also call or Whatsapp us on <b><font color="red"> +91-9108905901</font><b> to book a delivery.
-			</div>
-			</div>
-			
-			
-			<div id="map-container1" class="col-md-8" style="display:block;"></div>
-			</div>
-	
-			
-			
-			 //if($check_submission==1){ 
-				//echo "<center><div class=\"alert alert-success\"><strong>Booking Confirmed</strong>. We will get back to you in 30 minutes.</div></center> ";
-				//echo "<script>window.alert(\"Booking Confirmed.\");</script>";
-			//}
-			
-			</div>
-			</div>
-			//Form for Booking END
-			
-			
-			<div id="myModal" class="modal fade" role="dialog">
+          
+          <div class="form-group">
+          <label class="sr-only" for="name1">Sender's Name</label>
+            <input type="text" name="sender_name" id="sender_name" size="40dp" maxlength="25" class="form-control" required="true"  placeholder="Sender's Name"/>
+          </div>
+          
+          <div class="form-group">
+            <label class="sr-only" for="number1">Sender's Contact Number</label>
+            <input type="text" name="sender_number" id="sender_number" size="40dp" class="form-control" pattern="[0-9]{10}" required title="Enter a valid 10 digit number" placeholder="Sender's Contact Number"/>
+          </div>
+
+          <div class="form-group">
+          <label class="sr-only" for="name1">Pickup Address</label>
+            <input type="text" name="pickup_address" id="pickup_address" size="40dp" maxlength="25" class="form-control" required="true"  placeholder="Detailed Pickup Address"/>
+          </div>
+          
+
+           <div class="form-group">
+            <label class="sr-only" for="email1">Sender's Email</label>
+          <input type="email" id="sender_email" class="form-control" maxlength="30" name="sender_email"  required="true" placeholder="Sender's E-mail">
+          </div>
+          
+
+          <div class="form-group">
+          <label class="sr-only" for="name1">Receiver's Name</label>
+            <input type="text" name="receiver_name" id="receiver_name" size="40dp" maxlength="25" class="form-control" required="true"  placeholder="Receiver's Name"/>
+          </div>
+          
+          <div class="form-group">
+            <label class="sr-only" for="number1">Receiver's Contact Number</label>
+            <input type="text" name="receiver_number" id="receiver_number" size="40dp" class="form-control" pattern="[0-9]{10}" required title="Enter a valid 10 digit number" placeholder="Receiver's Contact Number"/>
+          </div>
+
+          <div class="form-group">
+          <label class="sr-only" for="name1">Delivery Address</label>
+            <input type="text" name="delivery_address" id="delivery_address" size="40dp" maxlength="25" class="form-control" required="true"  placeholder="Detailed Delivery Address"/>
+          </div>
+          
+
+           <div class="form-group">
+            <label class="sr-only" for="email1">Receiver's Email</label>
+          <input type="email" id="receiver_email" class="form-control" maxlength="30" name="receiver_email" placeholder="Receiver's E-mail">
+          </div>
+          
+
+          <div class="form-group">
+            <label class="sr-only" for="type1">Type</label>
+          <input type="text" id="type1" class="form-control" maxlength="30" name="type1" placeholder="Type of goods">
+          </div>
+          
+          <div class="form-group">
+          <textarea id="special1" class="form-control" name="special1" rows="3" maxlength="60" placeholder="Special Delivery Instructions:&#10;e.g: Acknowledgement back, Take cash on delivery, delivery charge paid at destination, etc."></textarea>
+          </div>
+          
+          <div class="g-recaptcha" data-sitekey="6Lf1XxMTAAAAAEVris2qlfmdIPw7ZXkWSzkYO32P"></div>
+          
+          <input type="hidden" name="address1" id="address1" value="">
+          <input type="hidden" name="address2" id="address2" value="">
+          <input type="hidden" name="weight_option" id="weight_option" value="">
+          <input type="hidden" name="delivery_charge" id="delivery_charge" value="">
+          
+          <font size="1px">By clicking on Confirm Now, you agree to our <a  style="cursor: pointer;" data-toggle="modal" data-target="#myModal">Terms & Conditions</font></a>.<br>
+          <button class="btn btn-lg btn-block wow fadeInUp" data-wow-delay=".3s" onClick="setValue();" type="submit" name="submit_book" >Confirm Now</button>
+        </div>
+            <div class="ajax-response"></div>
+      </form>
+      <br>
+      
+      </div>
+      
+      
+      <div id="map-container1" class="col-md-8" style="display:block;"></div>
+      </div>
+  
+      
+      
+      <?php //if($check_submission==1){ 
+        //echo "<center><div class=\"alert alert-success\"><strong>Booking Confirmed</strong>. We will get back to you in 30 minutes.</div></center> ";
+        //echo "<script>window.alert(\"Booking Confirmed.\");</script>";
+      //}
+      ?>
+      </div>
+      </div>
+      <!--Form for Booking END-->
+      
+      
+      <div id="myModal" class="modal fade" role="dialog">
   <div class="modal-dialog">
 
-    <! Modal content
+    <!-- Modal content-->
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -1301,16 +923,16 @@ if(typeof wabtn4fg==="undefined"){
       </div>
       <div class="modal-body">
         <p><b>1.</b> Nature, contents, conditions and value of the Consignments are unknown to Simply Delivered, (hereinafter called the Company). The company carries the goods in as-it-is condition as packed by consignor and entirely at the owner's risk.</p>
-		<p><b>2.</b> The Company shall not be liable for any loss or damage due to pilferage, leakage, shortage, breakage, theft, weather conditions, strikes, riots, disturbances, fire, explosions, accidents or due to any circumstances beyond control.</p>
-		<p><b>3.</b> The Consignor/Consignee shall be responsible for any delay, detention, loss, deterrence, seizure, confiscation or forfeiture of goods by Government authorities: -i) If he makes a wrong declaration about the contents or ii) If transport of such goods by road is prohibited or iii) If such goods are not accompanied by invoice, permits or other proper documents and are detained by any statutory authorities. Expenses incurred if any by the company in this connection shall be borne by the Consignor/Consignee only.</p>
-		<p><b>4.</b> The Consignor will have to deal directly with Octroi, Customs and any other statutory authorities for wrong declaration etc. at the destination of the goods.</p>
-		<p><b>5.</b> Fresh fruits, furniture, crockery, glassware and other such delicate goods are booked at the absolute risk of the consignor and the company shall not be responsible for any perish, damage, etc.</p>
-		<p><b>6.</b> The Company will not carry explosive/prohibited drugs/Gold/Silver/Bullion Coin/Industrial Diamond, Currency (Paper or Coin) of any Nationality, Lottery Ticket, Contraband items etc.</p>
-		<p><b>7.</b> The goods will be delivered to the consignee’s address as mentioned by the consignor while receiving the goods.</p>
-		<p><b>8.</b> In case of any dispute, the courts at Bengaluru alone will have exclusive jurisdiction.</p>
-		<p><b>9.</b> The company reserves the right to refuse or accept goods for dispatch without assigning any reason.</p>
-		<p><b>10.</b>  I/We declare the goods tendered by me do not contain any contraband goods and the description of the goods tendered by me/us is correct. I/We have read the above terms and conditions. I/We shall abide by the same.</p>
-	  </div>
+    <p><b>2.</b> The Company shall not be liable for any loss or damage due to pilferage, leakage, shortage, breakage, theft, weather conditions, strikes, riots, disturbances, fire, explosions, accidents or due to any circumstances beyond control.</p>
+    <p><b>3.</b> The Consignor/Consignee shall be responsible for any delay, detention, loss, deterrence, seizure, confiscation or forfeiture of goods by Government authorities: -i) If he makes a wrong declaration about the contents or ii) If transport of such goods by road is prohibited or iii) If such goods are not accompanied by invoice, permits or other proper documents and are detained by any statutory authorities. Expenses incurred if any by the company in this connection shall be borne by the Consignor/Consignee only.</p>
+    <p><b>4.</b> The Consignor will have to deal directly with Octroi, Customs and any other statutory authorities for wrong declaration etc. at the destination of the goods.</p>
+    <p><b>5.</b> Fresh fruits, furniture, crockery, glassware and other such delicate goods are booked at the absolute risk of the consignor and the company shall not be responsible for any perish, damage, etc.</p>
+    <p><b>6.</b> The Company will not carry explosive/prohibited drugs/Gold/Silver/Bullion Coin/Industrial Diamond, Currency (Paper or Coin) of any Nationality, Lottery Ticket, Contraband items etc.</p>
+    <p><b>7.</b> The goods will be delivered to the consignee’s address as mentioned by the consignor while receiving the goods.</p>
+    <p><b>8.</b> In case of any dispute, the courts at Bengaluru alone will have exclusive jurisdiction.</p>
+    <p><b>9.</b> The company reserves the right to refuse or accept goods for dispatch without assigning any reason.</p>
+    <p><b>10.</b>  I/We declare the goods tendered by me do not contain any contraband goods and the description of the goods tendered by me/us is correct. I/We have read the above terms and conditions. I/We shall abide by the same.</p>
+    </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
       </div>
@@ -1321,139 +943,71 @@ if(typeof wabtn4fg==="undefined"){
 
 
 
-		</div>
-	</section>
+    </div>
+  </section>
 
-<!Book a Delivery end-->
+<!--Book a Delivery end-->
 
-	<!-- Contact start -->
 
-	<section id="contact" class="pfblock pfblock-gray">
-		<div class="container">
-			<div class="row">
+<!-- Footer start -->
 
-				<div class="col-sm-6 col-sm-offset-3">
+  <footer id="footer">
+    <div class="container">
+      <div class="row">
 
-					<div class="pfblock-header">
-						<h2 class="pfblock-title">Contact Us</h2>
-						<div class="pfblock-line"></div>
-						
-					</div>
-				</div>
-				
-
-			</div><!-- .row -->
-  				<div class="row">
-			      	<div id="map-outer" class="col-md-12">
-			         	<div id="address" class="col-md-4">
-			            <h2>Our Location</h2>
-			            <address>
-			           		<p><strong>Simply Delivered</strong></p>
-							<p>#8/9, MES Road
-							<p>Bahubali Nagar</p>
-							<p>Jalahalli, Bengaluru - 560 013</p>
-							<p>Phone: +91.91089 05901</p>
-							<p>E-mail: <b>care@simplydelivered.in<b></p>
-			           	</address>
-			          	</div>
-       					<div id="map-container" class="col-md-8"></div>
-     				</div><!-- /map-outer -->
-  				</div> 
-			
-			<div class="row">
-
-				<div class="col-sm-6 col-sm-offset-3">
-
-				<a id="contact"></a>
-
-						<font align="center"><h2>WRITE TO US<h2></font>
-					<form method="post">
-						<div class="ajax-hidden">
-							<div class="form-group wow fadeInUp">
-								<label class="sr-only" for="c_name">Name <span style="color:red;">*</span></label>
-								<input type="text" id="c_name" class="form-control" name="c_name" placeholder="Name">
-							</div>
-
-							<div class="form-group wow fadeInUp" data-wow-delay=".1s">
-								<label class="sr-only" for="c_email">Email</label>
-								<input type="email" id="c_email" class="form-control" name="c_email" placeholder="E-mail">
-							</div>
-
-							<div class="form-group wow fadeInUp" data-wow-delay=".2s">
-								<textarea class="form-control" id="c_message" name="c_message" rows="7" placeholder="Message"></textarea>
-							</div>
-
-							<input type="submit" class="btn btn-lg btn-block wow fadeInUp" data-wow-delay=".3s" value="Submit">
-						</div>
-						<div class="ajax-response"></div>
-					</form>
-				
-				</div>
-			</div><!-- .row -->
-		</div><!-- .container -->
-	</section>
-
-	<!-- Contact end -->
-
-	<!-- Footer start -->
-
-	<footer id="footer">
-		<div class="container">
-			<div class="row">
-
-				<div class="col-sm-12">
-					
-					<!--<ul class="social-links">
-						<li><a href="index.html#" class="wow fadeInUp"><i class="fa fa-facebook"></i></a></li>
-						<li><a href="index.html#" class="wow fadeInUp" data-wow-delay=".1s"><i class="fa fa-twitter"></i></a></li>
-						<li><a href="index.html#" class="wow fadeInUp" data-wow-delay=".2s"><i class="fa fa-google-plus"></i></a></li>
-						<li><a href="index.html#" class="wow fadeInUp" data-wow-delay=".4s"><i class="fa fa-pinterest"></i></a></li>
-						<li><a href="index.html#" class="wow fadeInUp" data-wow-delay=".5s"><i class="fa fa-envelope"></i></a></li>
-					</ul>
-					-->
-					<p class="heart">Developed By <a href="https://www.linkedin.com/in/fakhruddin-tahery-06a69b9a">Fakhruddin Tahery</a>
+        <div class="col-sm-12">
+          
+          <!--<ul class="social-links">
+            <li><a href="index.html#" class="wow fadeInUp"><i class="fa fa-facebook"></i></a></li>
+            <li><a href="index.html#" class="wow fadeInUp" data-wow-delay=".1s"><i class="fa fa-twitter"></i></a></li>
+            <li><a href="index.html#" class="wow fadeInUp" data-wow-delay=".2s"><i class="fa fa-google-plus"></i></a></li>
+            <li><a href="index.html#" class="wow fadeInUp" data-wow-delay=".4s"><i class="fa fa-pinterest"></i></a></li>
+            <li><a href="index.html#" class="wow fadeInUp" data-wow-delay=".5s"><i class="fa fa-envelope"></i></a></li>
+          </ul>
+          -->
+          <p class="heart">Developed By <a href="https://www.linkedin.com/in/fakhruddin-tahery-06a69b9a">Fakhruddin Tahery</a>
                     </p>
                     <p class="copyright">
                         © 2015 Simply Delivered
-					</p>
-						
-					
-				</div>
+          </p>
+            
+          
+        </div>
 
-			</div><!-- .row -->
-		</div><!-- .container -->
-	</footer>
+      </div><!-- .row -->
+    </div><!-- .container -->
+  </footer>
 
-	<!-- Footer end -->
+  <!-- Footer end -->
 
-	<!-- Scroll to top -->
+  <!-- Scroll to top 
 
-	<div class="scroll-up">
-		<a href="#home"><i class="fa fa-angle-up"></i></a>
-	</div>
+  <div class="scroll-up">
+    <a href=""><i class="fa fa-angle-up"></i></a>
+  </div>
    
-    <!-- Scroll to top end-->
+    <!Scroll to top end-->
 
 
-	<!-- Javascript files -->
+  <!-- Javascript files -->
 
-	<script src="assets/js/jquery-1.11.1.min.js"></script>
-	<script src="assets/bootstrap/js/bootstrap.min.js"></script>
-	<script src="assets/js/jquery.parallax-1.1.3.js"></script>
-	<script src="assets/js/imagesloaded.pkgd.js"></script>
-	<script src="assets/js/jquery.sticky.js"></script>
-	<script src="assets/js/smoothscroll.js"></script>
-	<script src="assets/js/wow.min.js"></script>
-    <script src="assets/js/jquery.easypiechart.js"></script>
-    <script src="assets/js/waypoints.min.js"></script>
-    <script src="assets/js/jquery.cbpQTRotator.js"></script>
-	<script src="assets/js/custom.js"></script>
-	<script src="http://maps.google.com/maps/api/js?sensor=false"></script>
-	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAVOB6qYFgyFWHkbVi2T3lBE2m8_kxQmgI&signed_in=true&libraries=places&callback=initAutocomplete"
-        async defer></script>
-    <script src="assets/js/jquery-1.7.1.min.js"></script>  
-	<script src="assets/js/jquery.validate.js"></script> 
-	<script src="assets/script.js"></script> 
+  <script src="assets/js/jquery-1.11.1.min.js"></script>
+  <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+  <script src="assets/js/jquery.parallax-1.1.3.js"></script>
+  <script src="assets/js/imagesloaded.pkgd.js"></script>
+  <script src="assets/js/jquery.sticky.js"></script>
+  <script src="assets/js/smoothscroll.js"></script>
+  <script src="assets/js/wow.min.js"></script>
+  <script src="assets/js/jquery.easypiechart.js"></script>
+  <script src="assets/js/waypoints.min.js"></script>
+  <script src="assets/js/jquery.cbpQTRotator.js"></script>
+  <script src="assets/js/custom.js"></script>
+  <!--<script src="http://maps.google.com/maps/api/js?sensor=false"></script>-->
+  <!--<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAVOB6qYFgyFWHkbVi2T3lBE2m8_kxQmgI&signed_in=true&libraries=places&callback=initAutocomplete"
+        async defer></script>-->
+  <script src="assets/js/jquery-1.7.1.min.js"></script>  
+  <script src="assets/js/jquery.validate.js"></script> 
+  <script src="assets/script.js"></script> 
      
 </body>
 </html>
